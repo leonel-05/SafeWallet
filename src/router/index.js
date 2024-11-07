@@ -1,12 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/views/Login.vue";
-import Portfolio from "@/views/Portfolio.vue";
-import store from "@/store";
+import LoginForm from "../components/Auth/LoginForm.vue";
+import RegisterForm from "../components/Auth/RegisterForm.vue";
+import Portfolio from "../views/PortfolioView.vue";
+import store from "../store";
 
 const routes = [
-  { path: "/", component: Login },
+  {
+    path: "/",
+    name: "login",
+    component: LoginForm,
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: RegisterForm,
+  },
   {
     path: "/portfolio",
+    name: "portfolio",
     component: Portfolio,
     meta: { requiresAuth: true },
   },
@@ -17,9 +28,10 @@ const router = createRouter({
   routes,
 });
 
+// Proteger rutas que requieren autenticación
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    next("/");
+    next({ name: "login" });
   } else {
     next();
   }
